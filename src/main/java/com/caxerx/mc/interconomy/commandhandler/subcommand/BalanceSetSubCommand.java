@@ -1,14 +1,7 @@
-package com.caxerx.mc.commandhandler.subcommand;
+package com.caxerx.mc.interconomy.commandhandler.subcommand;
 
-import com.caxerx.mc.commandhandler.SubCommand;
-import com.caxerx.mc.interconomy.InterConomy;
-import com.caxerx.mc.interconomy.InterConomyConfig;
-import com.caxerx.mc.interconomy.api.InterConomyAPI;
-import com.caxerx.mc.interconomy.cache.DataCachingException;
+import com.caxerx.mc.interconomy.commandhandler.SubCommand;
 import com.caxerx.mc.interconomy.cache.TransitionalType;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

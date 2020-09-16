@@ -12,7 +12,7 @@ public class InterConomyUser {
     private final OfflinePlayer player;
     private double cachedBalance = 0.0d;
     private long lastCacheUpdate = -1;
-    private static CacheManager cacheManager = CacheManager.getInstance();
+    private static final CacheManager cacheManager = CacheManager.getInstance();
 
     public InterConomyUser(OfflinePlayer player) {
         this.player = player;

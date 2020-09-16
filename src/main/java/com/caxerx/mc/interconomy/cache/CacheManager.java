@@ -5,17 +5,12 @@ import com.caxerx.mc.interconomy.InterConomyConfig;
 import com.caxerx.mc.interconomy.UpdateResult;
 import com.caxerx.mc.interconomy.runnable.CacheUpdateRunnable;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.caxerx.mc.interconomy.UpdateResult.BALANCE_INSUFFICIENT;
-import static com.caxerx.mc.interconomy.UpdateResult.DATA_CACHING;
-import static com.caxerx.mc.interconomy.UpdateResult.SUCCESS;
+import static com.caxerx.mc.interconomy.UpdateResult.*;
 
 /**
  * Created by caxerx on 2016/8/13.
@@ -113,10 +108,10 @@ public class CacheManager {
 
 
     public void removeOfflinePlayer() {
-        users.keySet().forEach(user -> {
-            if (!user.isOnline() && System.currentTimeMillis() - users.get(user).getLastCacheUpdate() > InterConomyConfig.getInstance().updateTimeout) {
-                users.remove(user);
-            }
+        users.entrySet().removeIf(k->{
+            InterConomyUser user = k.getValue();
+            if (user == null) return false;
+            return k.getKey().isOnline() && System.currentTimeMillis() - user.getLastCacheUpdate() > InterConomyConfig.getInstance().updateTimeout;
         });
     }
 }

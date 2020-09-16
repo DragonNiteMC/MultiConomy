@@ -1,9 +1,8 @@
-package com.caxerx.mc.commandhandler;
+package com.caxerx.mc.interconomy.commandhandler;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.event.EventHandler;
 
 import java.util.*;
 

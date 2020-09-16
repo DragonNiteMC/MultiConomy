@@ -1,7 +1,8 @@
 name: InterConomy
 main: com.caxerx.mc.interconomy.InterConomy
-version: 2.5.2
-depend: [Vault]
+version: 2.6.3
+api-version: "1.13"
+depend: [Vault, HyperNiteMC-Core]
 commands:
  money:
   aliases: [balance, bal, gem, gems]
@@ -11,11 +12,11 @@ permissions:
     default: true
     description: Check their own balance.
   interconomy.check.other:
-    default: OP
+    default: op
     description: Check others balance.
   interconomy.modify:
-    default: OP
+    default: op
     description: Modify balance of a player.
   interconomy.reload:
-    default: OP
+    default: op
     description: Reload plugin.

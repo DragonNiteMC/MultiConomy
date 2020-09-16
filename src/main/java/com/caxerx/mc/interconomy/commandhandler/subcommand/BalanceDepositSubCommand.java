@@ -1,7 +1,6 @@
-package com.caxerx.mc.commandhandler.subcommand;
+package com.caxerx.mc.interconomy.commandhandler.subcommand;
 
-import com.caxerx.mc.commandhandler.SubCommand;
-import com.caxerx.mc.interconomy.InterConomy;
+import com.caxerx.mc.interconomy.commandhandler.SubCommand;
 import com.caxerx.mc.interconomy.cache.TransitionalType;
 import org.bukkit.command.CommandSender;
 
@@ -10,10 +9,10 @@ import java.util.List;
 /**
  * Created by caxerx on 2017/4/1.
  */
-public class ReloadSubCommand implements SubCommand {
+public class BalanceDepositSubCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
-        InterConomy.getInstance().reload();
+        BalanceModifyCommand.execute(TransitionalType.DEPOSIT, sender, args);
     }
 
     @Override
@@ -23,11 +22,11 @@ public class ReloadSubCommand implements SubCommand {
 
     @Override
     public String getPermission() {
-        return "interconomy.reload";
+        return "interconomy.modify";
     }
 
     @Override
     public String getName() {
-        return "reload";
+        return "deposit";
     }
 }

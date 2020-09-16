@@ -3,7 +3,8 @@ package com.caxerx.mc.interconomy.sql;
 import com.caxerx.mc.interconomy.InterConomy;
 import com.caxerx.mc.interconomy.InterConomyConfig;
 import com.caxerx.mc.interconomy.UpdateResult;
-import com.sun.xml.internal.ws.util.CompletedFuture;
+import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
+import com.hypernite.mc.hnmc.core.managers.SQLDataSource;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.Connection;
@@ -19,33 +20,44 @@ import static com.caxerx.mc.interconomy.UpdateResult.*;
  */
 public class MYSQLController {
     private InterConomyConfig config;
-    private MYSQLManager sql;
 
     private final String getAccountStatement;
     private final String getBalanceStatement;
     private final String createAccountStatement;
     private final String updateBalanceStatement;
     private final String setBalanceStatement;
-    private final String logStatement;
+    private final String createUserTableStmt;
     private final double defaultBalance = InterConomyConfig.getInstance().defaultBalance;
     private static MYSQLController instance;
 
-    public MYSQLController(MYSQLManager sql, InterConomyConfig config) {
-        this.sql = sql;
+    private final SQLDataSource sql;
+
+    public MYSQLController(InterConomyConfig config) {
+        this.sql = HyperNiteMC.getAPI().getSQLDataSource();
         this.config = config;
         String userdataTable = config.mysqlUserdataTable;
-        String logTable = config.mysqlLogTable;
+        createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0' , PRIMARY KEY (`uuid`(36)))";
         getAccountStatement = "SELECT * FROM `" + userdataTable + "` WHERE `uuid`=?";
         getBalanceStatement = "SELECT `money` FROM `" + userdataTable + "` WHERE `uuid` = ?";
-        createAccountStatement = "INSERT INTO `" + userdataTable + "` (`uuid`,`money`) SELECT ? , ? WHERE NOT EXISTS (SELECT * FROM `" + userdataTable + "` WHERE uuid = ?)";
-        updateBalanceStatement = "INSERT INTO " + userdataTable + " (`uuid`,`money`) VALUES(?,?) ON DUPLICATE KEY UPDATE money = money + ?";
-        setBalanceStatement = "INSERT INTO " + userdataTable + " (`uuid`,`money`) VALUES(?,?) ON DUPLICATE KEY UPDATE money = ?";
-        logStatement = "INSERT INTO `" + logTable + "`(`uuid`, `operator`, `action`, `value`,`time`) VALUES (?,?,?,?,?)";
+        createAccountStatement = "INSERT IGNORE INTO `" + userdataTable + "` VALUES (?,?,?)";
+        updateBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?) ON DUPLICATE KEY UPDATE name = ?, money = money + ?";
+        setBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?) ON DUPLICATE KEY UPDATE name = ?, money = ?";
         instance = this;
+        this.createTable();
     }
 
     public static MYSQLController getInstance() {
         return instance;
+    }
+
+    private void createTable(){
+        try(Connection connection = sql.getConnection();
+            PreparedStatement createTable = connection.prepareStatement(createUserTableStmt);
+        ) {
+            createTable.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public double getBalance(OfflinePlayer player) {
@@ -86,8 +98,8 @@ public class MYSQLController {
              PreparedStatement statement = connection.prepareStatement(createAccountStatement)
         ) {
             statement.setString(1, uuid);
-            statement.setDouble(2, defaultBalance);
-            statement.setString(3, uuid);
+            statement.setString(2, player.getName());
+            statement.setDouble(3, defaultBalance);
             statement.execute();
         } catch (SQLException e) {
             InterConomy.getInstance().getLogger().log(Level.SEVERE, e.getSQLState(), e);
@@ -111,8 +123,10 @@ public class MYSQLController {
                 }
             }
             statement2.setString(1, uuid);
-            statement2.setDouble(2, set ? value : config.defaultBalance + value);
-            statement2.setDouble(3, value);
+            statement2.setString(2, player.getName());
+            statement2.setDouble(3, set ? value : config.defaultBalance + value);
+            statement2.setString(4, player.getName());
+            statement2.setDouble(5, value);
             if (statement2.executeUpdate() > 0) {
                 result = SUCCESS;
             }

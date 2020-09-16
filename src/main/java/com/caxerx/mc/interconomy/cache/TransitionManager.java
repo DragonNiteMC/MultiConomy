@@ -12,14 +12,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Created by caxerx on 2016/8/13.
  */
 public class TransitionManager {
-    private ConcurrentLinkedQueue<TransitionAction> transitional;
+    private final ConcurrentLinkedQueue<TransitionAction> transitional;
     private static TransitionManager instance;
-    private InterConomyConfig config;
-    private InterConomy plugin;
+    private final InterConomy plugin;
 
-    public TransitionManager(InterConomy plugin, InterConomyConfig config) {
+    public TransitionManager(InterConomy plugin) {
         instance = this;
-        this.config = config;
         this.plugin = plugin;
         transitional = new ConcurrentLinkedQueue<>();
     }

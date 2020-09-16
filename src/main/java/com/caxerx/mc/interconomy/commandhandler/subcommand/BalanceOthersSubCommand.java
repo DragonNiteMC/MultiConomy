@@ -1,15 +1,14 @@
-package com.caxerx.mc.commandhandler.subcommand;
+package com.caxerx.mc.interconomy.commandhandler.subcommand;
 
-import com.caxerx.mc.commandhandler.SubCommand;
+import com.caxerx.mc.interconomy.commandhandler.SubCommand;
 import com.caxerx.mc.interconomy.InterConomy;
 import com.caxerx.mc.interconomy.runnable.BalanceMessageRunnable;
-import com.caxerx.mc.interconomy.sql.MYSQLController;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by caxerx on 2017/4/1.
@@ -17,7 +16,9 @@ import java.util.List;
 public class BalanceOthersSubCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
-        new BalanceMessageRunnable(sender, Bukkit.getOfflinePlayer(args[0])).runTaskAsynchronously(InterConomy.getInstance());
+        UUID uuid = Bukkit.getPlayerUniqueId(args[0]);
+        OfflinePlayer player = uuid != null ? Bukkit.getOfflinePlayer(uuid) : null;
+        new BalanceMessageRunnable(sender, player).runTaskAsynchronously(InterConomy.getInstance());
     }
 
     @Override

@@ -1,10 +1,9 @@
-package com.caxerx.mc.commandhandler.subcommand;
+package com.caxerx.mc.interconomy.commandhandler.subcommand;
 
-import com.caxerx.mc.commandhandler.SubCommand;
+import com.caxerx.mc.interconomy.commandhandler.SubCommand;
 import com.caxerx.mc.interconomy.InterConomy;
 import com.caxerx.mc.interconomy.InterConomyConfig;
 import com.caxerx.mc.interconomy.runnable.BalanceMessageRunnable;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,16 +1,12 @@
 package com.caxerx.mc.interconomy;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 
 /**
@@ -20,7 +16,6 @@ public class InterConomyConfig {
     public final String mysqlHost;
     public final String mysqlDatabase;
     public final int mysqlPort;
-    public final String mysqlLogTable;
     public final String mysqlUsername;
     public final String mysqlPassword;
     public final String mysqlUserdataTable;
@@ -52,35 +47,26 @@ public class InterConomyConfig {
 
     public InterConomyConfig(Plugin plugin) {
         instance = this;
-
         File msgFile = new File(plugin.getDataFolder().getPath() + File.separator + "message.yml");
         File configFile = new File(plugin.getDataFolder().getPath() + File.separator + "config.yml");
-        YamlConfiguration defaultmsg = new YamlConfiguration();
-        message = new YamlConfiguration();
-        try {
-            defaultmsg.loadFromString(IOUtils.toString(plugin.getResource("message.yml"), Charset.defaultCharset()));
+
             if (!configFile.exists()) {
-                FileUtils.copyInputStreamToFile(plugin.getResource("config.yml"), configFile);
+                plugin.saveResource("config.yml", true);
             }
             if (!msgFile.exists()) {
-                FileUtils.copyInputStreamToFile(plugin.getResource("message.yml"), msgFile);
+                plugin.saveResource("message.yml", true);
             }
-            message.load(msgFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            InterConomy.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
-        }
         config = plugin.getConfig();
         config.options().copyDefaults(true);
         plugin.saveConfig();
-        message.setDefaults(defaultmsg);
+        message = YamlConfiguration.loadConfiguration(msgFile);
 
         mysqlHost = config.getString("mysql-config.host");
         mysqlPort = config.getInt("mysql-config.port");
         mysqlUsername = config.getString("mysql-config.username");
         mysqlPassword = config.getString("mysql-config.password");
         mysqlDatabase = config.getString("mysql-config.database");
-        mysqlUserdataTable = config.getString("mysql-config.userdata-table");
-        mysqlLogTable = config.getString("mysql-config.log-table");
+        mysqlUserdataTable = config.getString("userdata-table");
         mysqlSslEnable = config.getBoolean("mysql-config.ssl");
         connectionPoolMaxConnections = config.getInt("connection-pool.minimum-connections");
         connectionPoolMinConnections = config.getInt("connection-pool.maximum-connections");

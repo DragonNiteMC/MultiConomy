@@ -1,6 +1,7 @@
 package com.caxerx.mc.interconomy.runnable;
 
 import com.caxerx.mc.interconomy.InterConomy;
+import com.caxerx.mc.interconomy.UpdateResult;
 import com.caxerx.mc.interconomy.cache.TransitionAction;
 import com.caxerx.mc.interconomy.cache.TransitionManager;
 import com.caxerx.mc.interconomy.cache.TransitionalType;
@@ -31,8 +32,8 @@ public class TransitionRunnable extends BukkitRunnable {
             if (type == TransitionalType.WITHDRAW) {
                 value = -value;
             }
-            MYSQLController.getInstance().updatePlayer(player, value, type == TransitionalType.SET);
-            if (player.isOnline()) {
+            var result = MYSQLController.getInstance().updatePlayer(player, value, type == TransitionalType.SET);
+            if (player.isOnline() && result == UpdateResult.SUCCESS) {
                 new CacheUpdateRunnable(player).runTaskAsynchronously(InterConomy.getInstance());
             }
             //sqlController.logTransition(player.getUniqueId().toString(), operator, "WITHDRAW", value, System.currentTimeMillis(), connection, true);

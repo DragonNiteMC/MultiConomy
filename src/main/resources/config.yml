@@ -1,15 +1,3 @@
 default-balance: 1000
 update-timeout: 30000
-mysql-config:
-    host: localhost
-    port: 3306
-    username: root
-    password: ''
-    database: minecraft
-    userdata-table: interconomy_userdata
-    log-table: interconomy_log
-    ssl: false
-connection-pool:
-    minimum-connections: 5
-    maximum-connections: 20
-    timeout-millis: 5000
+userdata-table: interconomy_user

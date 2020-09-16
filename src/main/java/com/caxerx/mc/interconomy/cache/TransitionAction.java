@@ -1,18 +1,15 @@
 package com.caxerx.mc.interconomy.cache;
 
-import com.caxerx.mc.interconomy.InterConomy;
-import com.caxerx.mc.interconomy.runnable.CacheUpdateRunnable;
-import com.caxerx.mc.interconomy.sql.MYSQLController;
 import org.bukkit.OfflinePlayer;
 
 /**
  * Created by caxerx on 2016/6/28.
  */
 public class TransitionAction {
-    private OfflinePlayer player;
-    private TransitionalType type;
-    private double value;
-    private String operator;
+    private final OfflinePlayer player;
+    private final TransitionalType type;
+    private final double value;
+    private final String operator;
 
     public TransitionAction(OfflinePlayer player, TransitionalType type, double value, String operator) {
         this.player = player;

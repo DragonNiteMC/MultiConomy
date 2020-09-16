@@ -1,4 +1,4 @@
-package com.caxerx.mc.commandhandler;
+package com.caxerx.mc.interconomy.commandhandler;
 
 import java.util.*;
 

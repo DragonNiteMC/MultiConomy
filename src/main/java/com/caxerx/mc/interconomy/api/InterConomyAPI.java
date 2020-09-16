@@ -1,7 +1,5 @@
 package com.caxerx.mc.interconomy.api;
 
-import com.caxerx.mc.interconomy.InterConomy;
-import com.caxerx.mc.interconomy.InterConomyConfig;
 import com.caxerx.mc.interconomy.UpdateResult;
 import com.caxerx.mc.interconomy.cache.CacheManager;
 import com.caxerx.mc.interconomy.cache.DataCachingException;
@@ -12,13 +10,9 @@ import org.bukkit.OfflinePlayer;
  */
 public class InterConomyAPI {
     private static InterConomyAPI instance;
-    private InterConomy plugin;
-    private InterConomyConfig config;
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
-    public InterConomyAPI(InterConomy plugin, InterConomyConfig config, CacheManager cacheManager) {
-        this.plugin = plugin;
-        this.config = config;
+    public InterConomyAPI(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
         instance = this;
     }
