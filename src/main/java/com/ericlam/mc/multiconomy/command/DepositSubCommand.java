@@ -12,7 +12,7 @@ public final class DepositSubCommand extends CommandNode {
     private final BalanceModifier modifier;
 
     public DepositSubCommand(CommandNode parent, BalanceModifier modifier) {
-        super(parent, "deposit", "multiconomy.modify", "賦予金額", "<player> <amount>", "add");
+        super(parent, "deposit", "multiconomy.modify", "賦予金額", "<player> <amount>", "add", "give", "plus", "gain");
         this.modifier = modifier;
     }
     @Override

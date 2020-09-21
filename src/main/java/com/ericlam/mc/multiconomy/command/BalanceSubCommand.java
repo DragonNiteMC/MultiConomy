@@ -9,6 +9,7 @@ import com.hypernite.mc.hnmc.core.misc.commands.CommandNode;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,8 +28,17 @@ public final class BalanceSubCommand extends CommandNode {
 
     @Override
     public boolean executeCommand(@NotNull CommandSender commandSender, @NotNull List<String> list) {
-        String target = list.get(0);
-        UUID uuid = Bukkit.getPlayerUniqueId(target);
+        UUID uuid;
+        if (list.size() > 1) {
+            String target = list.get(0);
+            uuid = Bukkit.getPlayerUniqueId(target);
+        } else {
+            if (!(commandSender instanceof Player)){
+                commandSender.sendMessage(msg.getPrefix() + HyperNiteMC.getAPI().getCoreConfig().getNotPlayer());
+                return true;
+            }
+            uuid = ((Player)commandSender).getUniqueId();
+        }
         if (uuid == null) {
             commandSender.sendMessage(msg.getPrefix() + HyperNiteMC.getAPI().getCoreConfig().getNotFoundPlayer());
             return true;

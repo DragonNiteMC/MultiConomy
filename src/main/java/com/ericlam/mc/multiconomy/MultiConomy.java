@@ -8,7 +8,6 @@ import com.ericlam.mc.multiconomy.config.ConomyConfig;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
 import net.milkbowl.vault.economy.Economy;
-import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
@@ -20,10 +19,8 @@ import java.util.Map;
  * Created by caxerx on 2016/6/27.
  */
 public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
-    public static Economy econ = null;
     private CurrencyManager currencyManager;
     private ConomyConfig config;
-    private MessageConfig msg;
     private long updateTimeout;
 
     private static MultiConomy instance;
@@ -36,27 +33,19 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
         return instance;
     }
 
-    @Override
-    public void onLoad() {
+    public void onEnable() {
+        instance = this;
         var manager = HyperNiteMC.getAPI().getFactory().getConfigFactory(this)
                 .register(ConomyConfig.class)
                 .register(MessageConfig.class)
                 .dump();
         this.config = manager.getConfigAs(ConomyConfig.class);
-        this.msg = manager.getConfigAs(MessageConfig.class);
-        config.currencies.forEach((cmd, setting) -> getDescription().getCommands().put(cmd, Map.of(
-                "description", cmd + " 貨幣指令",
-                "aliases", setting.alias
-        )));
-    }
-
-    public void onEnable() {
-        instance = this;
+        MessageConfig msg = manager.getConfigAs(MessageConfig.class);
         this.updateTimeout = config.updateTimeout;
         this.currencyManager = new CurrencyManager(this, config.tablePrefix, msg);
         config.currencies.forEach(currencyManager::register);
         getServer().getPluginManager().registerEvents(new PlayerListener(currencyManager), this);
-        if (!setupEconomy() || getVaultCurrency() == null) {
+        if (getVaultCurrency() == null) {
             getLogger().warning("Cannot setup Economy with vault");
         } else {
             getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
@@ -70,18 +59,6 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
 
     public void onDisable() {
         instance = null;
-    }
-
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return true;
     }
 
     @Override

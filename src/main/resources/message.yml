@@ -1,5 +1,5 @@
-prefix: "&6金錢// &7"
-balance-message: "&7{player} 目前有 &2{money} &7{currency}"
+prefix: "&b經濟// &7"
+balance-message: "&7{player} 目前有 &2{money} &e{currency}"
 balance-checking: "&6查詢餘額中..."
 balance-insufficient-message: "&c餘額不足"
 transitional-failure-message: "&c餘額改變失敗"

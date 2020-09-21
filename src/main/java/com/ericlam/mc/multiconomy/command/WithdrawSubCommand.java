@@ -11,7 +11,7 @@ public final class WithdrawSubCommand extends CommandNode {
 
     private final BalanceModifier modifier;
     public WithdrawSubCommand(CommandNode parent, BalanceModifier modifier) {
-        super(parent, "withdraw", "multiconomy.modify", "提取金額", "<player> <amount>", "take");
+        super(parent, "withdraw", "multiconomy.modify", "提取金額", "<player> <amount>", "take", "remove", "reduce");
         this.modifier = modifier;
     }
 

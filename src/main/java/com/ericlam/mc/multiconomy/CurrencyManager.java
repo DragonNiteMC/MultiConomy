@@ -34,8 +34,13 @@ public class CurrencyManager {
         var sqlController = new MYSQLController(table, settings.defaultBalance);
         var cacheManager = new CacheManager(plugin, sqlController, currency, transitionManager);
         if (currencyControllerMap.putIfAbsent(currency, cacheManager) == null) {
-            HyperNiteMC.getAPI().getCommandRegister().registerCommand(plugin, new CurrencyMainCommand(currency, settings.alias, cacheManager, msg));
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, sqlController::createTable);
+            try{
+                PluginCommandHacker.registerCurrencyCommand(plugin, currency, settings);
+                HyperNiteMC.getAPI().getCommandRegister().registerCommand(plugin, new CurrencyMainCommand(currency, settings.alias, cacheManager, msg));
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, sqlController::createTable);
+            } catch (Exception e) {
+                plugin.getLogger().warning("無法註冊指令 /"+currency+", 略過此貨幣的註冊。");
+            }
         }
     }
 

@@ -55,8 +55,8 @@ public class CacheManager implements CurrencyController {
         return getPlayer(player).getCachedBalance();
     }
 
-    public UpdateResult commitPlayerBalance(OfflinePlayer player, double value, boolean set, boolean forceUnlock) throws TableLockedException{
-        return mysqlController.updatePlayer(player, value, set, forceUnlock);
+    public UpdateResult commitPlayerBalance(OfflinePlayer player, double value, boolean set){
+        return mysqlController.updatePlayer(player, value, set);
     }
 
 
@@ -83,8 +83,8 @@ public class CacheManager implements CurrencyController {
         }
     }
 
-    public void fetchBalance(OfflinePlayer player, int times) throws DataCachingException, TableLockedException {
-        getPlayer(player).cacheBalance(mysqlController.getBalance(player, times <= 0));
+    public void fetchBalance(OfflinePlayer player) throws DataCachingException {
+        getPlayer(player).cacheBalance(mysqlController.getBalance(player));
     }
 
 

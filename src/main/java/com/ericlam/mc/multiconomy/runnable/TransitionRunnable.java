@@ -18,16 +18,10 @@ public class TransitionRunnable extends BukkitRunnable {
 
     private final Queue<TransitionAction> trans;
     private final CacheManager cacheManager;
-    private int times;
 
-    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans, int times) {
+    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans) {
         this.trans = trans;
-        this.times = times;
         this.cacheManager = cacheManager;
-    }
-
-    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans){
-        this(cacheManager, trans, 5);
     }
 
     @Override
@@ -40,13 +34,9 @@ public class TransitionRunnable extends BukkitRunnable {
             if (type == TransitionalType.WITHDRAW) {
                 value = -value;
             }
-            try{
-                var result = cacheManager.commitPlayerBalance(player, value, type == TransitionalType.SET, times <= 0);
-                if (player.isOnline() && result == UpdateResult.SUCCESS) {
-                    new CacheUpdateRunnable(cacheManager, player).runTaskAsynchronously(MultiConomy.getPlugin());
-                }
-            }catch (TableLockedException e){
-                new TransitionRunnable(cacheManager, trans, --times).runTaskAsynchronously(MultiConomy.getPlugin());
+            var result = cacheManager.commitPlayerBalance(player, value, type == TransitionalType.SET);
+            if (player.isOnline() && result == UpdateResult.SUCCESS) {
+                new CacheUpdateRunnable(cacheManager, player).runTaskAsynchronously(MultiConomy.getPlugin());
             }
             //sqlController.logTransition(player.getUniqueId().toString(), operator, "WITHDRAW", value, System.currentTimeMillis(), connection, true);
         }
