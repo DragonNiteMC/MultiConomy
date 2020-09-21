@@ -1,3 +1,15 @@
-default-balance: 1000
-update-timeout: 30000
-userdata-table: interconomy_user
+updateTimeout: 30000
+tablePrefix: Interconomy_
+vaultCurrency: gems
+currencies:
+  gems:
+    defaultBalance: 1000
+    alias:
+      - gem
+      - money
+      - g
+  crystals:
+    defaultBalance: 0
+    alias:
+      - crystal
+      - c

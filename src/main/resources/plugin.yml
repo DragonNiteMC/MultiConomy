@@ -1,22 +1,28 @@
-name: InterConomy
-main: com.caxerx.mc.interconomy.InterConomy
+name: MultiConomy
+main: com.ericlam.mc.multiconomy.MultiConomy
 version: 2.6.3
 api-version: "1.13"
 depend: [Vault, HyperNiteMC-Core]
 commands:
- money:
-  aliases: [balance, bal, gem, gems]
-  description: "InterConomy command"
+  money:
+    aliases: [ gem, gems ]
+    description: "MultiConomy command"
+  balance:
+    aliases: [bal]
+    description: "MultiConomy balance command"
+  multiconomy:
+    aliases: [conomy, mconomy]
+    description: "MultiConomy admin commands"
 permissions:
-  interconomy.check:
+  multiconomy.check:
     default: true
     description: Check their own balance.
-  interconomy.check.other:
+  multiconomy.check.other:
     default: op
     description: Check others balance.
-  interconomy.modify:
+  multiconomy.modify:
     default: op
     description: Modify balance of a player.
-  interconomy.reload:
+  multiconomy.reload:
     default: op
     description: Reload plugin.
