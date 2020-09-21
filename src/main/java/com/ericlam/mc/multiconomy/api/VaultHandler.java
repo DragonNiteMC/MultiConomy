@@ -6,6 +6,7 @@ import com.ericlam.mc.multiconomy.cache.DataCachingException;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
@@ -23,6 +24,7 @@ public class VaultHandler implements Economy {
     private final DecimalFormat decFormatter;
 
     public VaultHandler(CurrencyController controller, MessageConfig messageConfig) {
+        Validate.notNull(controller, "VaultController is null");
         this.controller = controller;
         this.messageConfig = messageConfig;
         decFormatter = new DecimalFormat("0");

@@ -1,15 +1,12 @@
 name: MultiConomy
 main: com.ericlam.mc.multiconomy.MultiConomy
-version: 2.6.3
-api-version: "1.13"
+version: ${project.version}
+api-version: "1.16"
 depend: [Vault, HyperNiteMC-Core]
 commands:
   money:
-    aliases: [ gem, gems ]
-    description: "MultiConomy command"
-  balance:
-    aliases: [bal]
-    description: "MultiConomy balance command"
+    aliases: [ bal, balance ]
+    description: "MultiConomy vault balance command"
   multiconomy:
     aliases: [conomy, mconomy]
     description: "MultiConomy admin commands"

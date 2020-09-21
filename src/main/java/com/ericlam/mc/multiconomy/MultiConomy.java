@@ -3,6 +3,7 @@ package com.ericlam.mc.multiconomy;
 import com.ericlam.mc.multiconomy.api.CurrencyController;
 import com.ericlam.mc.multiconomy.api.MultiConomyAPI;
 import com.ericlam.mc.multiconomy.api.VaultHandler;
+import com.ericlam.mc.multiconomy.command.BalanceMainCommand;
 import com.ericlam.mc.multiconomy.config.ConomyConfig;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
@@ -55,10 +56,11 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
         this.currencyManager = new CurrencyManager(this, config.tablePrefix, msg);
         config.currencies.forEach(currencyManager::register);
         getServer().getPluginManager().registerEvents(new PlayerListener(currencyManager), this);
-        if (!setupEconomy()) {
+        if (!setupEconomy() || getVaultCurrency() == null) {
             getLogger().warning("Cannot setup Economy with vault");
         } else {
             getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
+            HyperNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
         }
     }
 
@@ -89,9 +91,7 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
 
     @Override
     public CurrencyController getVaultCurrency() {
-        var vaultController = currencyManager.getCurrencyController(config.vaultCurrency);
-        Validate.notNull(vaultController, "VaultController is null");
-        return vaultController;
+        return currencyManager.getCurrencyController(config.vaultCurrency);
     }
 
     @Override

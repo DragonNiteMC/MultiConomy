@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by caxerx on 2017/4/1.
  */
-public class BalanceModifier {
+public final class BalanceModifier {
 
     private final MessageConfig msg;
     private final CurrencyController controller;

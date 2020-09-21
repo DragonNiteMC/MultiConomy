@@ -6,7 +6,6 @@ currencies:
     defaultBalance: 1000
     alias:
       - gem
-      - money
       - g
   crystals:
     defaultBalance: 0
