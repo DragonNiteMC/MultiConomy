@@ -18,10 +18,16 @@ public class TransitionRunnable extends BukkitRunnable {
 
     private final Queue<TransitionAction> trans;
     private final CacheManager cacheManager;
+    private int times;
 
-    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans) {
+    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans, int times) {
         this.trans = trans;
         this.cacheManager = cacheManager;
+        this.times = times;
+    }
+
+    public TransitionRunnable(CacheManager cacheManager, Queue<TransitionAction> trans){
+        this(cacheManager, trans, 5);
     }
 
     @Override
@@ -31,12 +37,20 @@ public class TransitionRunnable extends BukkitRunnable {
             double value = action.getValue();
             TransitionalType type = action.getType();
             OfflinePlayer player = action.getPlayer();
+            if (!cacheManager.isLocked(player)) cacheManager.lockPlayer(player);
             if (type == TransitionalType.WITHDRAW) {
                 value = -value;
             }
-            var result = cacheManager.commitPlayerBalance(player, value, type == TransitionalType.SET);
-            if (player.isOnline() && result == UpdateResult.SUCCESS) {
-                new CacheUpdateRunnable(cacheManager, player).runTaskAsynchronously(MultiConomy.getPlugin());
+            try{
+                var result = cacheManager.commitPlayerBalance(player, value, type == TransitionalType.SET, times <= 0);
+                if (trans.stream().noneMatch(offline -> offline.getPlayer().getUniqueId().equals(player.getUniqueId()))){
+                    cacheManager.unlockPlayer(player);
+                }
+                if (player.isOnline() && result == UpdateResult.SUCCESS) {
+                    new CacheUpdateRunnable(cacheManager, player).runTaskAsynchronously(MultiConomy.getPlugin());
+                }
+            }catch (TableLockedException e){
+                new TransitionRunnable(cacheManager, trans, --times).runTaskLaterAsynchronously(MultiConomy.getPlugin(), 20L);
             }
             //sqlController.logTransition(player.getUniqueId().toString(), operator, "WITHDRAW", value, System.currentTimeMillis(), connection, true);
         }

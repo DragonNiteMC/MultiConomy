@@ -4,7 +4,7 @@ import com.ericlam.mc.multiconomy.MultiConomy;
 import com.ericlam.mc.multiconomy.UpdateResult;
 import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
 import com.hypernite.mc.hnmc.core.managers.SQLDataSource;
-import com.mysql.jdbc.MysqlErrorNumbers;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.Connection;
@@ -20,25 +20,31 @@ public class MYSQLController {
 
     private final String getAccountStatement;
     private final String getBalanceStatement;
-    private final String getBalanceLockStatement;
     private final String createAccountStatement;
     private final String updateBalanceStatement;
     private final String setBalanceStatement;
     private final String createUserTableStmt;
+    private final String lockerRowStatement;
     private final double defaultBalance;
 
     private final SQLDataSource sql;
+    private final String serverId;
 
     public MYSQLController(String userdataTable, int defaultBalance) {
         this.sql = HyperNiteMC.getAPI().getSQLDataSource();
+        this.serverId = Bukkit.getServer().getIp() + ":" + Bukkit.getServer().getPort();
         this.defaultBalance = defaultBalance;
-        createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0' , PRIMARY KEY (`uuid`(36)))";
+        createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0' `lock` TEXT DEFAULT NULL, PRIMARY KEY (`uuid`(36)))";
         getAccountStatement = "SELECT * FROM `" + userdataTable + "` WHERE `uuid`=?";
-        getBalanceStatement = "SELECT `money` FROM `" + userdataTable + "` WHERE `uuid` = ?";
-        getBalanceLockStatement = getBalanceStatement.concat(" FOR UPDATE");
-        createAccountStatement = "INSERT IGNORE INTO `" + userdataTable + "` VALUES (?,?,?)";
-        updateBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?) ON DUPLICATE KEY UPDATE `name` = ?, `money` = money + ?";
-        setBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?) ON DUPLICATE KEY UPDATE `name` = ?, `money` = ?";
+        getBalanceStatement = "SELECT `money`,`lock` FROM `" + userdataTable + "` WHERE `uuid` = ?";
+        createAccountStatement = "INSERT IGNORE INTO `" + userdataTable + "` VALUES (?,?,?,null)";
+        updateBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?,null) ON DUPLICATE KEY UPDATE `name` = ?, `money` = money + ?, `lock` = null";
+        setBalanceStatement = "INSERT INTO " + userdataTable + " VALUES(?,?,?,null) ON DUPLICATE KEY UPDATE `name` = ?, `money` = ?, `lock` = null";
+        lockerRowStatement = "UPDATE IGNORE " + userdataTable + " SET `lock`=? WHERE `uuid`=?";
+    }
+
+    private String getServerId() {
+        return serverId;
     }
 
     public void createTable() {
@@ -51,7 +57,19 @@ public class MYSQLController {
         }
     }
 
-    public double getBalance(OfflinePlayer player){
+    public void locker(OfflinePlayer player, boolean lock) {
+        String uuid = player.getUniqueId().toString();
+        try (Connection connection = sql.getConnection();
+             PreparedStatement statement = connection.prepareStatement(lockerRowStatement)) {
+            statement.setString(1, lock ? getServerId() : null);
+            statement.setString(2, uuid);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public double getBalance(OfflinePlayer player, boolean forceUnlock) throws TableLockedException {
         double result = defaultBalance;
         String uuid = player.getUniqueId().toString();
         try (Connection connection = sql.getConnection();
@@ -59,6 +77,7 @@ public class MYSQLController {
             statement.setString(1, uuid);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                if (!forceUnlock) checkLock(resultSet);
                 result = resultSet.getDouble("money");
             } else {
                 createAccount(player);
@@ -98,17 +117,25 @@ public class MYSQLController {
         }
     }
 
+    public void checkLock(ResultSet set) throws TableLockedException, SQLException {
+        var lock = set.getString("lock");
+        if (lock != null && !lock.equals(getServerId())){
+            throw new TableLockedException();
+        }
+    }
 
-    public UpdateResult updatePlayer(OfflinePlayer player, double value, boolean set){
+
+    public UpdateResult updatePlayer(OfflinePlayer player, double value, boolean set, boolean forceUnlock) throws TableLockedException {
         String uuid = player.getUniqueId().toString();
         UpdateResult result = UpdateResult.UNKNOWN;
         try (Connection connection = sql.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getBalanceLockStatement);
+             PreparedStatement statement = connection.prepareStatement(getBalanceStatement);
              PreparedStatement statement2 = connection.prepareStatement(set ? setBalanceStatement : updateBalanceStatement)) {
             if (!set && value < 0) {
                 statement.setString(1, uuid);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
+                    if (!forceUnlock) checkLock(resultSet);
                     if (resultSet.getDouble("money") < Math.abs(value)) {
                         return UpdateResult.BALANCE_INSUFFICIENT;
                     }

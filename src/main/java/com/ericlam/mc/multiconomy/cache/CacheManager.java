@@ -19,7 +19,8 @@ public class CacheManager implements CurrencyController {
     private final MultiConomy plugin;
     private final MYSQLController mysqlController;
     private final TransitionManager transitionManager;
-    private final ConcurrentHashMap<OfflinePlayer, ConomyUser> users;
+    private final ConcurrentHashMap<OfflinePlayer, ConomyUser> users = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<OfflinePlayer, Boolean> lockerTable = new ConcurrentHashMap<>();
     private final long updateTimeout;
     private final String currency;
 
@@ -29,7 +30,6 @@ public class CacheManager implements CurrencyController {
         this.transitionManager = transitionManager;
         this.updateTimeout = plugin.getUpdateTimeout();
         this.currency = currency;
-        users = new ConcurrentHashMap<>();
     }
 
     public String getCurrency() {
@@ -55,8 +55,22 @@ public class CacheManager implements CurrencyController {
         return getPlayer(player).getCachedBalance();
     }
 
-    public UpdateResult commitPlayerBalance(OfflinePlayer player, double value, boolean set){
-        return mysqlController.updatePlayer(player, value, set);
+    public UpdateResult commitPlayerBalance(OfflinePlayer player, double value, boolean set, boolean forceUnlock) throws TableLockedException {
+        return mysqlController.updatePlayer(player, value, set, forceUnlock);
+    }
+
+    public void lockPlayer(OfflinePlayer player){
+        this.mysqlController.locker(player, true);
+        lockerTable.put(player, true);
+    }
+
+    public void unlockPlayer(OfflinePlayer player){
+        this.mysqlController.locker(player, false);
+        lockerTable.put(player, false);
+    }
+
+    public boolean isLocked(OfflinePlayer player){
+        return lockerTable.getOrDefault(player, false);
     }
 
 
@@ -83,8 +97,8 @@ public class CacheManager implements CurrencyController {
         }
     }
 
-    public void fetchBalance(OfflinePlayer player) throws DataCachingException {
-        getPlayer(player).cacheBalance(mysqlController.getBalance(player));
+    public void fetchBalance(OfflinePlayer player, boolean forceUnlock) throws DataCachingException, TableLockedException {
+        getPlayer(player).cacheBalance(mysqlController.getBalance(player, forceUnlock));
     }
 
 

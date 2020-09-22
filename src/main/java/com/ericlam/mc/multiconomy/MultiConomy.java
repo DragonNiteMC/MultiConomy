@@ -9,11 +9,8 @@ import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Map;
 
 /**
  * Created by caxerx on 2016/6/27.
@@ -25,7 +22,7 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
 
     private static MultiConomy instance;
 
-    public static MultiConomyAPI getAPI(){
+    public static MultiConomyAPI getAPI() {
         return instance;
     }
 
