@@ -34,7 +34,7 @@ public class MYSQLController {
         this.sql = HyperNiteMC.getAPI().getSQLDataSource();
         this.serverId = Bukkit.getServer().getIp() + ":" + Bukkit.getServer().getPort();
         this.defaultBalance = defaultBalance;
-        createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0' `lock` TEXT DEFAULT NULL, PRIMARY KEY (`uuid`(36)))";
+        createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0', `lock` TEXT DEFAULT NULL, PRIMARY KEY (`uuid`(36)))";
         getAccountStatement = "SELECT * FROM `" + userdataTable + "` WHERE `uuid`=?";
         getBalanceStatement = "SELECT `money`,`lock` FROM `" + userdataTable + "` WHERE `uuid` = ?";
         createAccountStatement = "INSERT IGNORE INTO `" + userdataTable + "` VALUES (?,?,?,null)";
