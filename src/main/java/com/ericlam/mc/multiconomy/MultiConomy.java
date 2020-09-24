@@ -42,11 +42,14 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
         this.currencyManager = new CurrencyManager(this, config.tablePrefix, msg);
         config.currencies.forEach(currencyManager::register);
         getServer().getPluginManager().registerEvents(new PlayerListener(currencyManager), this);
-        if (getVaultCurrency() == null) {
-            getLogger().warning("Cannot setup Economy with vault");
-        } else {
-            getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
-            HyperNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
+        if (getServer().getPluginManager().isPluginEnabled("Vault")){
+            getLogger().info("Vault found, hooking into vault.");
+            if (getVaultCurrency() == null) {
+                getLogger().warning("Cannot setup Economy with vault: vault currency is null");
+            } else {
+                getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
+                HyperNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
+            }
         }
     }
 

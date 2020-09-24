@@ -2,7 +2,8 @@ name: MultiConomy
 main: com.ericlam.mc.multiconomy.MultiConomy
 version: ${project.version}
 api-version: "1.16"
-depend: [Vault, HyperNiteMC-Core]
+depend: [HyperNiteMC-Core]
+softdepend: [Vault]
 commands:
   money:
     aliases: [ bal, balance ]
