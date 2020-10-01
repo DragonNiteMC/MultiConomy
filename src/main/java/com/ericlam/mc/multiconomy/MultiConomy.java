@@ -7,6 +7,7 @@ import com.ericlam.mc.multiconomy.command.BalanceMainCommand;
 import com.ericlam.mc.multiconomy.config.ConomyConfig;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
@@ -50,6 +51,10 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
                 getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
                 HyperNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
             }
+        }
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
+            getLogger().info("PlaceholderAPI is enabled. successfully registered for placeholders");
+            new CurrencyPlaceholder(this).register();
         }
     }
 

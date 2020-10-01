@@ -1,9 +1,10 @@
 name: MultiConomy
 main: com.ericlam.mc.multiconomy.MultiConomy
+authors: [EricLam, Caxerx]
 version: ${project.version}
 api-version: "1.16"
 depend: [HyperNiteMC-Core]
-softdepend: [Vault]
+softdepend: [Vault, PlaceholderAPI]
 commands:
   money:
     aliases: [ bal, balance ]
