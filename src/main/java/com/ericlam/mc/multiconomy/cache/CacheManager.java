@@ -55,6 +55,11 @@ public class CacheManager implements CurrencyController {
         return getPlayer(player).getCachedBalance();
     }
 
+    @Override
+    public UpdateResult withdrawPlayer(OfflinePlayer player, double value) {
+        return this.withdrawPlayer(player, value, "plugin");
+    }
+
     public UpdateResult commitPlayerBalance(OfflinePlayer player, double value, boolean set, boolean forceUnlock) throws TableLockedException {
         return mysqlController.updatePlayer(player, value, set, forceUnlock);
     }
@@ -97,6 +102,11 @@ public class CacheManager implements CurrencyController {
         }
     }
 
+    @Override
+    public UpdateResult depositPlayer(OfflinePlayer player, double value) {
+        return this.depositPlayer(player, value, "plugin");
+    }
+
     public void fetchBalance(OfflinePlayer player, boolean forceUnlock) throws DataCachingException, TableLockedException {
         getPlayer(player).cacheBalance(mysqlController.getBalance(player, forceUnlock));
     }
@@ -121,10 +131,15 @@ public class CacheManager implements CurrencyController {
         }
     }
 
+    @Override
+    public UpdateResult setPlayer(OfflinePlayer player, double value) {
+        return this.setPlayer(player, value, "plugin");
+    }
+
 
     @Override
     public UpdateResult setPlayer(OfflinePlayer player, double value, String operator) {
-        ConomyUser cacheUser = null;
+        ConomyUser cacheUser;
         try {
             cacheUser = getPlayer(player);
         } catch (DataCachingException e) {

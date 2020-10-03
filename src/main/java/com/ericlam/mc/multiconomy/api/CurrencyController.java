@@ -8,9 +8,15 @@ public interface CurrencyController {
 
     double getBalance(OfflinePlayer player) throws DataCachingException;
 
+    UpdateResult withdrawPlayer(OfflinePlayer player, double value);
+
     UpdateResult withdrawPlayer(OfflinePlayer player, double value, String operator);
 
+    UpdateResult depositPlayer(OfflinePlayer player, double value);
+
     UpdateResult depositPlayer(OfflinePlayer player, double value, String operator);
+
+    UpdateResult setPlayer(OfflinePlayer player, double value);
 
     UpdateResult setPlayer(OfflinePlayer player, double value, String operator);
 
