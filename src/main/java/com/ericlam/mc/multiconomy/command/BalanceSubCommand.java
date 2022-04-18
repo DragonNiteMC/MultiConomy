@@ -4,8 +4,8 @@ import com.ericlam.mc.multiconomy.MultiConomy;
 import com.ericlam.mc.multiconomy.cache.CacheManager;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.ericlam.mc.multiconomy.runnable.BalanceMessageRunnable;
-import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
-import com.hypernite.mc.hnmc.core.misc.commands.CommandNode;
+import com.dragonnite.mc.dnmc.core.main.DragonNiteMC;
+import com.dragonnite.mc.dnmc.core.misc.commands.CommandNode;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -34,13 +34,13 @@ public final class BalanceSubCommand extends CommandNode {
             uuid = Bukkit.getPlayerUniqueId(target);
         } else {
             if (!(commandSender instanceof Player)){
-                commandSender.sendMessage(msg.getPrefix() + HyperNiteMC.getAPI().getCoreConfig().getNotPlayer());
+                commandSender.sendMessage(msg.getPrefix() + DragonNiteMC.getAPI().getCoreConfig().getNotPlayer());
                 return true;
             }
             uuid = ((Player)commandSender).getUniqueId();
         }
         if (uuid == null) {
-            commandSender.sendMessage(msg.getPrefix() + HyperNiteMC.getAPI().getCoreConfig().getNotFoundPlayer());
+            commandSender.sendMessage(msg.getPrefix() + DragonNiteMC.getAPI().getCoreConfig().getNotFoundPlayer());
             return true;
         }
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);

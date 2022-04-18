@@ -6,7 +6,7 @@ import com.ericlam.mc.multiconomy.api.VaultHandler;
 import com.ericlam.mc.multiconomy.command.BalanceMainCommand;
 import com.ericlam.mc.multiconomy.config.ConomyConfig;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
-import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
+import com.dragonnite.mc.dnmc.core.main.DragonNiteMC;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
@@ -33,7 +33,7 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
 
     public void onEnable() {
         instance = this;
-        var manager = HyperNiteMC.getAPI().getFactory().getConfigFactory(this)
+        var manager = DragonNiteMC.getAPI().getFactory().getConfigFactory(this)
                 .register(ConomyConfig.class)
                 .register(MessageConfig.class)
                 .dump();
@@ -49,7 +49,7 @@ public class MultiConomy extends JavaPlugin implements MultiConomyAPI {
                 getLogger().warning("Cannot setup Economy with vault: vault currency is null");
             } else {
                 getServer().getServicesManager().register(Economy.class, new VaultHandler(getVaultCurrency(), msg), this, ServicePriority.High);
-                HyperNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
+                DragonNiteMC.getAPI().getCommandRegister().registerCommand(this, new BalanceMainCommand(getVaultCurrency(), msg));
             }
         }
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){

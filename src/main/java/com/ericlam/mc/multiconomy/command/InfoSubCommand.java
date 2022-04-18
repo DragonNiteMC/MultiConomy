@@ -1,6 +1,6 @@
 package com.ericlam.mc.multiconomy.command;
 
-import com.hypernite.mc.hnmc.core.misc.commands.CommandNode;
+import com.dragonnite.mc.dnmc.core.misc.commands.CommandNode;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

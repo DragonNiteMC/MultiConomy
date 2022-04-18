@@ -1,14 +1,8 @@
 updateTimeout: 30000
 tablePrefix: Interconomy_
-vaultCurrency: gems
+vaultCurrency: wrlds
 currencies:
-  gems:
-    defaultBalance: 1000
-    alias:
-      - gem
-      - g
-  crystals:
+  wrlds:
     defaultBalance: 0
     alias:
-      - crystal
-      - c
+      - wrld

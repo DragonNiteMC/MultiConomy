@@ -7,7 +7,7 @@ import com.ericlam.mc.multiconomy.config.ConomyConfig;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
 import com.ericlam.mc.multiconomy.runnable.CacheUpdateRunnable;
 import com.ericlam.mc.multiconomy.sql.MYSQLController;
-import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
+import com.dragonnite.mc.dnmc.core.main.DragonNiteMC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -36,7 +36,7 @@ public class CurrencyManager {
         if (currencyControllerMap.putIfAbsent(currency, cacheManager) == null) {
             try{
                 PluginCommandHacker.registerCurrencyCommand(plugin, currency, settings);
-                HyperNiteMC.getAPI().getCommandRegister().registerCommand(plugin, new CurrencyMainCommand(currency, settings.alias, cacheManager, msg));
+                DragonNiteMC.getAPI().getCommandRegister().registerCommand(plugin, new CurrencyMainCommand(currency, settings.alias, cacheManager, msg));
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, sqlController::createTable);
             } catch (Exception e) {
                 plugin.getLogger().warning("無法註冊指令 /"+currency+", 略過此貨幣的註冊。");

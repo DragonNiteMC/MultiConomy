@@ -2,7 +2,7 @@ package com.ericlam.mc.multiconomy.command;
 
 import com.ericlam.mc.multiconomy.cache.CacheManager;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
-import com.hypernite.mc.hnmc.core.misc.commands.DefaultCommand;
+import com.dragonnite.mc.dnmc.core.misc.commands.DefaultCommand;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 

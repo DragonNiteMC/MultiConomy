@@ -3,7 +3,7 @@ main: com.ericlam.mc.multiconomy.MultiConomy
 authors: [EricLam, Caxerx]
 version: ${project.version}
 api-version: "1.16"
-depend: [HyperNiteMC-Core]
+depend: [DragonNiteMC-Core]
 softdepend: [Vault, PlaceholderAPI]
 commands:
   money:

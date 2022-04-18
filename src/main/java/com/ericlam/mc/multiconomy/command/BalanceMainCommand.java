@@ -3,7 +3,7 @@ package com.ericlam.mc.multiconomy.command;
 import com.ericlam.mc.multiconomy.api.CurrencyController;
 import com.ericlam.mc.multiconomy.cache.CacheManager;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
-import com.hypernite.mc.hnmc.core.misc.commands.CommandNode;
+import com.dragonnite.mc.dnmc.core.misc.commands.CommandNode;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 

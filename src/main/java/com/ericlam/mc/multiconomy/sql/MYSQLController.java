@@ -2,8 +2,8 @@ package com.ericlam.mc.multiconomy.sql;
 
 import com.ericlam.mc.multiconomy.MultiConomy;
 import com.ericlam.mc.multiconomy.UpdateResult;
-import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
-import com.hypernite.mc.hnmc.core.managers.SQLDataSource;
+import com.dragonnite.mc.dnmc.core.main.DragonNiteMC;
+import com.dragonnite.mc.dnmc.core.managers.SQLDataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -31,7 +31,7 @@ public class MYSQLController {
     private final String serverId;
 
     public MYSQLController(String userdataTable, int defaultBalance) {
-        this.sql = HyperNiteMC.getAPI().getSQLDataSource();
+        this.sql = DragonNiteMC.getAPI().getSQLDataSource();
         this.serverId = Bukkit.getServer().getIp() + ":" + Bukkit.getServer().getPort();
         this.defaultBalance = defaultBalance;
         createUserTableStmt = "CREATE TABLE IF NOT EXISTS `" + userdataTable + "` ( `uuid` TEXT NOT NULL , `name` TINYTEXT, `money` DOUBLE NOT NULL DEFAULT '0', `lock` TEXT DEFAULT NULL, PRIMARY KEY (`uuid`(36)))";

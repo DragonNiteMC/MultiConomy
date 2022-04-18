@@ -4,7 +4,7 @@ import com.ericlam.mc.multiconomy.UpdateResult;
 import com.ericlam.mc.multiconomy.api.CurrencyController;
 import com.ericlam.mc.multiconomy.cache.TransitionalType;
 import com.ericlam.mc.multiconomy.config.MessageConfig;
-import com.hypernite.mc.hnmc.core.main.HyperNiteMC;
+import com.dragonnite.mc.dnmc.core.main.DragonNiteMC;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -37,7 +37,7 @@ public final class BalanceModifier {
         }
         UUID uuid = Bukkit.getPlayerUniqueId(target);
         if (uuid == null) {
-            sender.sendMessage(msg.getPrefix() + HyperNiteMC.getAPI().getCoreConfig().getNotFoundPlayer());
+            sender.sendMessage(msg.getPrefix() + DragonNiteMC.getAPI().getCoreConfig().getNotFoundPlayer());
             return;
         }
         OfflinePlayer user = Bukkit.getOfflinePlayer(uuid);
